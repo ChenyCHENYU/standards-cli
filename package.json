@@ -1,0 +1,42 @@
+{
+  "name": "standards-cli",
+  "version": "1.0.0",
+  "description": "一键初始化前端项目提交规范链路（cz-git + commitlint + husky + lint-staged）",
+  "type": "module",
+  "bin": {
+    "standards": "./src/index.js"
+  },
+  "exports": {
+    "./templates/*": "./templates/*"
+  },
+  "files": [
+    "src",
+    "templates"
+  ],
+  "scripts": {
+    "test": "node src/index.js init"
+  },
+  "keywords": [
+    "commitlint",
+    "husky",
+    "lint-staged",
+    "cz-git",
+    "commitizen",
+    "git",
+    "conventional-commits",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/standards-cli"
+  },
+  "homepage": "https://github.com/yourusername/standards-cli#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/standards-cli/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
