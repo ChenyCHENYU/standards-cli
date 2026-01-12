@@ -1,5 +1,8 @@
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "process";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import {
   exists,
   readJson,
@@ -17,6 +20,9 @@ import {
   SUPPORTED_PMS,
 } from "../lib/pm.js";
 import { execLive } from "../lib/exec.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const rl = readline.createInterface({ input, output });
 
@@ -113,10 +119,24 @@ function hasLintTools(pkg) {
 async function generateConfigFiles(pkg) {
   console.log("\n📝 生成配置文件...");
 
+  // 读取模板文件
+  const commitlintConfig = readFileSync(
+    join(__dirname, "../../templates/commitlint/config.cjs"),
+    "utf-8"
+  );
+  const lintstagedConfigFull = readFileSync(
+    join(__dirname, "../../templates/lint-staged/config.cjs"),
+    "utf-8"
+  );
+  const lintstagedConfigSimple = readFileSync(
+    join(__dirname, "../../templates/lint-staged/config-simple.cjs"),
+    "utf-8"
+  );
+
   // commitlint.config.cjs
   const commitlintCreated = await writeFileIfMissing(
     "commitlint.config.cjs",
-    `module.exports = require('standards-cli/templates/commitlint/config.cjs');\n`
+    commitlintConfig
   );
   if (commitlintCreated) {
     console.log("  ✔ commitlint.config.cjs");
@@ -124,25 +144,14 @@ async function generateConfigFiles(pkg) {
     console.log("  ⚠ commitlint.config.cjs (已存在，跳过)");
   }
 
-  // cz.config.cjs
-  const czConfigCreated = await writeFileIfMissing(
-    "cz.config.cjs",
-    `module.exports = require('standards-cli/templates/commitlint/cz.config.cjs');\n`
-  );
-  if (czConfigCreated) {
-    console.log("  ✔ cz.config.cjs");
-  } else {
-    console.log("  ⚠ cz.config.cjs (已存在，跳过)");
-  }
-
   // .lintstagedrc.cjs - 根据是否有 eslint/prettier 选择模板
   const hasLintToolsInstalled = hasLintTools(pkg);
-  const lintstagedTemplate = hasLintToolsInstalled
-    ? "require('standards-cli/templates/lint-staged/config.cjs')"
-    : "require('standards-cli/templates/lint-staged/config-simple.cjs')";
+  const lintstagedContent = hasLintToolsInstalled
+    ? lintstagedConfigFull
+    : lintstagedConfigSimple;
   const lintstagedrcCreated = await writeFileIfMissing(
     ".lintstagedrc.cjs",
-    `module.exports = ${lintstagedTemplate};\n`
+    lintstagedContent
   );
   if (lintstagedrcCreated) {
     console.log("  ✔ .lintstagedrc.cjs");
@@ -154,18 +163,14 @@ async function generateConfigFiles(pkg) {
   await ensureDir(".husky");
 
   // .husky/pre-commit
-  const preCommitContent = `#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-npx --no-install lint-staged
+  const preCommitContent = `npx --no-install lint-staged
 `;
   await writeFile(".husky/pre-commit", preCommitContent);
   await chmodSafe(".husky/pre-commit");
   console.log("  ✔ .husky/pre-commit");
 
   // .husky/commit-msg
-  const commitMsgContent = `#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-npx --no-install commitlint --edit "$1"
+  const commitMsgContent = `npx --no-install commitlint --edit "$1"
 `;
   await writeFile(".husky/commit-msg", commitMsgContent);
   await chmodSafe(".husky/commit-msg");
