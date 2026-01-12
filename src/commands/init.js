@@ -369,8 +369,8 @@ export async function init(args) {
         await runHuskyInstall(pm);
 
         // 7. 打印成功信息
-        const hasLintTools = hasLintTools(pkg);
-        printSuccess(pm, hasLintTools);
+        const hasLintToolsInstalled = hasLintTools(pkg);
+        printSuccess(pm, hasLintToolsInstalled);
       } else {
         printInstallCommand(missingDeps, "pnpm");
       }
@@ -391,8 +391,8 @@ export async function init(args) {
       }
 
       // 打印成功信息
-      const hasLintTools = hasLintTools(pkg);
-      printSuccess(pm, hasLintTools);
+      const hasLintToolsInstalled = hasLintTools(pkg);
+      printSuccess(pm, hasLintToolsInstalled);
     }
 
     rl.close();

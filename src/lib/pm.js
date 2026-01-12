@@ -1,4 +1,3 @@
-
 import { exists } from "./fs.js";
 
 /**
@@ -60,7 +59,7 @@ export function getExecCommand(pm, command) {
     case "bun":
       return `bunx ${command}`;
     case "yarn":
-      return `yarn ${command}`;
+      return `yarn exec ${command}`;
     case "npm":
       return `npx ${command}`;
     default:
