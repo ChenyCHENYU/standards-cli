@@ -1,25 +1,37 @@
-
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
-    "type-enum": [
-      2,
-      "always",
-      [
-        "feat", // 新功能
-        "fix", // 修复 bug
-        "docs", // 文档更新
-        "style", // 代码格式调整（不影响功能）
-        "refactor", // 重构
-        "perf", // 性能优化
-        "test", // 测试相关
-        "build", // 构建系统或外部依赖变动
-        "ci", // CI 配置变动
-        "chore", // 其他杂项
-        "revert", // 回滚提交
-      ],
-    ],
+    "scope-enum": [0],
+    "type-enum": [2, "always", ["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]],
+    "scope-empty": [2, "never"],
     "subject-empty": [2, "never"],
     "subject-max-length": [2, "always", 72],
+  },
+  prompt: {
+    messages: {
+      type: "选择你要提交的类型:",
+      scope: "填写 scope (必填，如: auth, login, user):",
+      subject: "填写简短描述 (必填，最多 72 字符):",
+      confirmCommit: "确认提交?",
+    },
+    types: [
+      { value: "feat", name: "feat:     新功能" },
+      { value: "fix", name: "fix:      修复 bug" },
+      { value: "docs", name: "docs:     文档更新" },
+      { value: "style", name: "style:    代码格式调整" },
+      { value: "refactor", name: "refactor: 重构" },
+      { value: "perf", name: "perf:     性能优化" },
+      { value: "test", name: "test:     测试相关" },
+      { value: "build", name: "build:    构建系统或外部依赖变动" },
+      { value: "ci", name: "ci:       CI 配置变动" },
+      { value: "chore", name: "chore:    其他杂项" },
+      { value: "revert", name: "revert:   回滚提交" },
+    ],
+    useEmoji: false,
+    scopes: [],
+    enableMultipleScopes: false,
+    scopeEnumSeparator: ",",
+    allowCustomScopes: true,
+    allowEmptyScopes: false,
   },
 };
