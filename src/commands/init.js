@@ -136,8 +136,8 @@ async function generateConfigFiles(pkg) {
   }
 
   // .lintstagedrc.cjs - 根据是否有 eslint/prettier 选择模板
-  const hasLintTools = hasLintTools(pkg);
-  const lintstagedTemplate = hasLintTools
+  const hasLintToolsInstalled = hasLintTools(pkg);
+  const lintstagedTemplate = hasLintToolsInstalled
     ? "require('standards-cli/templates/lint-staged/config.cjs')"
     : "require('standards-cli/templates/lint-staged/config-simple.cjs')";
   const lintstagedrcCreated = await writeFileIfMissing(
