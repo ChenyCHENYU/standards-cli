@@ -25,14 +25,17 @@ npx standards-cli init
 ### 方式二：作为项目依赖安装 - 推荐用于团队项目
 
 ```bash
-# 在项目根目录下安装
-pnpm add -D standards-cli
-# 或
-npm install -D standards-cli
-# 或
-yarn add -D standards-cli
-# 或
-bun add -d standards-cli
+# bun
+bun add standards-cli
+
+# npm
+npm install standards-cli
+
+# pnpm
+pnpm add standards-cli
+
+# yarn
+yarn add standards-cli
 ```
 
 安装后，通过 npm scripts 或 pnpm exec 运行：
