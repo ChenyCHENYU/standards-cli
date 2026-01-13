@@ -107,13 +107,18 @@ standards init [选项]
 ```json
 {
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "cz": "cz",
     "commit": "cz"
   },
   "config": {
     "commitizen": {
       "path": "cz-git"
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "string-width": "^7.0.0"
     }
   }
 }
@@ -132,7 +137,23 @@ standards init [选项]
 
 初始化完成后，可以使用以下两种方式提交：
 
-### 方式一：交互式提交（推荐）
+### 方式一：符合规范格式的直接提交（推荐）
+
+```bash
+git commit -m "feat(login): 完成登录相关功能"
+git commit -m "fix(user): 修复用户信息更新bug"
+```
+
+**格式要求：** `type(scope): subject`
+
+- `type`: 提交类型（feat/fix/docs 等）
+- `scope`: 模块名称（必填，如 login、user、api 等）
+- `subject`: 简短描述
+
+✅ **只要符合格式，就能正常提交**  
+❌ **不符合格式会被 commit-msg hook 拦截**
+
+### 方式二：交互式提交
 
 ```bash
 pnpm commit
@@ -142,24 +163,24 @@ pnpm cz
 
 使用交互式界面选择提交类型、填写描述等，自动生成符合规范的提交信息。
 
-**交互流程：**
+## 团队成员使用流程
 
-1. 选择提交类型（feat/fix/docs/...）
-2. **填写 scope（对应代码模块）** - 必填，手动输入如 `auth`
-3. 填写简短描述（subject）- 必填
-4. 确认提交
-
-**最终提交信息格式：** `feat (auth): add login feature`
-
-### 方式二：直接提交
+团队成员克隆项目后，只需执行：
 
 ```bash
-git commit -m "feat: add new feature"
+# 1. 安装依赖（会自动执行 prepare 脚本，初始化 Git hooks）
+pnpm install
+
+# 2. 之后正常提交即可（符合规范就能提交，不符合会被拦截）
+git commit -m "feat(login): 完成登录相关功能"
 ```
 
-直接使用符合规范的提交信息格式提交，commit-msg hook 会自动验证。
+**说明：**
 
-**注意：** 无论使用哪种方式，commit-msg hook 都会拦截不符合规范的提交信息。
+- `pnpm install` 会自动触发 `prepare` 脚本
+- `prepare` 脚本执行 `husky`，自动配置 Git hooks
+- 配置完成后，每次 commit 都会自动检查提交信息格式
+- **无需额外操作**，开箱即用
 
 ## lint-staged 智能配置
 
@@ -219,24 +240,24 @@ CLI 会自动检测项目是否已安装 `eslint` 和 `prettier`，并生成对�
 **示例：**
 
 ```bash
-# 正确
-git commit -m "feat (auth): add login"
-git commit -m "fix (api): resolve login bug"
-git commit -m "docs: update README"
+# ✅ 正确格式（能提交）
+git commit -m "feat(login): 完成登录相关功能"
+git commit -m "fix(api): 修复接口超时问题"
+git commit -m "docs(readme): 更新文档"
 
-# 错误（会被拦截）
-git commit -m "add login"
-git commit -m "fix bug"
-git commit -m "update"
-git commit -m "feat: add login"  # 缺少 scope
+# ❌ 错误格式（会被拦截）
+git commit -m "add login"           # 缺少 type 和 scope
+git commit -m "feat: add login"     # 缺少 scope
+git commit -m "update"              # 格式不符合
 ```
 
 ## 注意事项
 
-1. **eslint/prettier 依赖**：本 CLI 不安装 eslint 和 prettier，请根据项目需要自行安装
-2. **lint-staged 配置**：CLI 会自动检测并生成合适的配置
-3. **Node 版本**：需要 Node.js >= 18
-4. **提交方式**：`git commit` 和 `pnpm commit` 都会被 commit-msg hook 拦截验证
+1. **团队成员使用**：只需 `pnpm install`，会自动初始化 Git hooks
+2. **提交方式**：`git commit -m "feat(scope): message"` 只要符合格式就能提交
+3. **eslint/prettier 依赖**：本 CLI 不安装 eslint 和 prettier，请根据项目需要自行安装
+4. **lint-staged 配置**：CLI 会自动检测并生成合适的配置
+5. **Node 版本**：需要 Node.js >= 18
 
 ## 开发
 

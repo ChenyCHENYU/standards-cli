@@ -163,14 +163,16 @@ async function generateConfigFiles(pkg) {
   await ensureDir(".husky");
 
   // .husky/pre-commit
-  const preCommitContent = `npx --no-install lint-staged
+  const preCommitContent = `#!/bin/sh
+npx --no-install lint-staged
 `;
   await writeFile(".husky/pre-commit", preCommitContent);
   await chmodSafe(".husky/pre-commit");
   console.log("  ✔ .husky/pre-commit");
 
   // .husky/commit-msg
-  const commitMsgContent = `npx --no-install commitlint --edit "$1"
+  const commitMsgContent = `#!/bin/sh
+npx --no-install commitlint --edit "$1"
 `;
   await writeFile(".husky/commit-msg", commitMsgContent);
   await chmodSafe(".husky/commit-msg");
@@ -194,8 +196,12 @@ async function updatePackageJson() {
 
   // 添加 prepare（如果不存在）
   if (!pkg.scripts.prepare) {
-    pkg.scripts.prepare = "husky install";
-    console.log('  ✔ 添加 scripts.prepare = "husky install"');
+    pkg.scripts.prepare = "husky";
+    console.log('  ✔ 添加 scripts.prepare = "husky"');
+    modified = true;
+  } else if (pkg.scripts.prepare === "husky install" || pkg.scripts.prepare === "husky init") {
+    pkg.scripts.prepare = "husky";
+    console.log('  ✔ 更新 scripts.prepare = "husky"');
     modified = true;
   } else {
     console.log("  ⚠ scripts.prepare (已存在，跳过)");
@@ -236,6 +242,23 @@ async function updatePackageJson() {
     console.log("  ⚠ config.commitizen.path (已存在，跳过)");
   }
 
+  // 添加 pnpm overrides 来降级 string-width（兼容 Node.js 18）
+  if (!pkg.pnpm) {
+    pkg.pnpm = {};
+  }
+  if (!pkg.pnpm.overrides) {
+    pkg.pnpm.overrides = {};
+  }
+  if (pkg.pnpm.overrides["string-width"] !== "^7.0.0") {
+    pkg.pnpm.overrides["string-width"] = "^7.0.0";
+    console.log(
+      '  ✔ 添加 pnpm.overrides.string-width = "^7.0.0" (兼容 Node.js 18)'
+    );
+    modified = true;
+  } else {
+    console.log("  ⚠ pnpm.overrides.string-width (已存在，跳过)");
+  }
+
   if (modified) {
     await writeJson("package.json", pkg);
   }
@@ -269,17 +292,19 @@ async function installDependencies(pm, missingDeps) {
 }
 
 /**
- * 执行 husky install
+ * 执行 husky init
  */
 async function runHuskyInstall(pm) {
   console.log("\n🔧 初始化 husky...");
-  const command = getExecCommand(pm, "husky install");
-  console.log(`  执行: ${command}`);
-  const code = await execLive(command);
-  if (code !== 0) {
-    throw new Error(`husky install 失败，退出码: ${code}`);
+  
+  // 设置 Git hooks 路径为 .husky
+  const gitConfigCmd = "git config core.hooksPath .husky";
+  console.log(`  执行: ${gitConfigCmd}`);
+  const gitCode = await execLive(gitConfigCmd);
+  if (gitCode !== 0) {
+    throw new Error(`设置 Git hooks 路径失败，退出码: ${gitCode}`);
   }
-  console.log("  ✔ husky 初始化成功");
+  console.log("  ✔ Git hooks 路径已设置为 .husky");
 }
 
 /**
@@ -310,7 +335,7 @@ function printInstallCommand(missingDeps, defaultPm) {
     const marker = pm === defaultPm ? " [推荐]" : "";
     console.log(`  ${command}${marker}`);
   }
-  console.log("\n安装后请执行: husky install\n");
+  console.log("\n安装后请运行 prepare 脚本来初始化 hooks（npm install 会自动执行）\n");
 }
 
 /**
