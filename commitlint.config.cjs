@@ -10,7 +10,6 @@
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
-    "scope-enum": [0],
     "type-enum": [
       2,
       "always",
@@ -28,15 +27,14 @@ module.exports = {
         "revert",
       ],
     ],
-    "scope-empty": [2, "never"],
     "subject-empty": [2, "never"],
     "subject-max-length": [2, "always", 72],
   },
   prompt: {
     messages: {
       type: "选择你要提交的类型:",
-      scope: "填写 scope (必填，如: auth, login, user):",
-      subject: "填写简短描述 (必填，最多 72 字符):",
+      customScope: "输入 scope (可选，如: login, auth):",
+      subject: "输入简短描述:",
       confirmCommit: "确认提交?",
     },
     types: [
@@ -53,10 +51,7 @@ module.exports = {
       { value: "revert", name: "revert:   回滚提交" },
     ],
     useEmoji: false,
-    scopes: [],
-    enableMultipleScopes: false,
-    scopeEnumSeparator: ",",
-    allowCustomScopes: true,
-    allowEmptyScopes: false,
+    skipQuestions: ["scope", "body", "breaking", "breakingBody", "footer", "footerPrefix"],
+    defaultScope: "___CUSTOM___:",
   },
 };

@@ -1,6 +1,6 @@
 {
   "name": "standards-cli",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "一键初始化前端项目提交规范链路（cz-git + commitlint + husky + lint-staged）",
   "type": "module",
   "bin": {
@@ -45,11 +45,6 @@
   "config": {
     "commitizen": {
       "path": "cz-git"
-    }
-  },
-  "pnpm": {
-    "overrides": {
-      "string-width": "^7.0.0"
     }
   },
   "devDependencies": {
