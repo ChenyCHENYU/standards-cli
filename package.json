@@ -1,6 +1,6 @@
 {
   "name": "standards-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "一键初始化前端项目提交规范链路（cz-git + commitlint + husky + lint-staged）",
   "type": "module",
   "bin": {
@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "test": "node src/index.js init",
-    "prepare": "husky",
+    "prepare": "husky || exit 0",
     "cz": "cz",
     "commit": "cz"
   },

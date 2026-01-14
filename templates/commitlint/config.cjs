@@ -1,33 +1,8 @@
-/*
- * @Author: ChenYu ycyplus@gmail.com
- * @Date: 2026-01-13 23:14:22
- * @LastEditors: ChenYu ycyplus@gmail.com
- * @LastEditTime: 2026-01-13 23:22:25
- * @FilePath: \standards-cli\templates\commitlint\config.cjs
- * @Description:
- * Copyright (c) 2026 by CHENY, All Rights Reserved 😎.
- */
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
     "scope-enum": [0],
-    "type-enum": [
-      2,
-      "always",
-      [
-        "feat",
-        "fix",
-        "docs",
-        "style",
-        "refactor",
-        "perf",
-        "test",
-        "build",
-        "ci",
-        "chore",
-        "revert",
-      ],
-    ],
+    "type-enum": [2, "always", ["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]],
     "scope-empty": [2, "never"],
     "subject-empty": [2, "never"],
     "subject-max-length": [2, "always", 72],
@@ -53,6 +28,7 @@ module.exports = {
       { value: "revert", name: "revert:   回滚提交" },
     ],
     useEmoji: false,
+    scopes: [],
     enableMultipleScopes: false,
     scopeEnumSeparator: ",",
     allowCustomScopes: true,

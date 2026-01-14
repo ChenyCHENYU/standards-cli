@@ -53,6 +53,7 @@ module.exports = {
       { value: "revert", name: "revert:   回滚提交" },
     ],
     useEmoji: false,
+    scopes: [],
     enableMultipleScopes: false,
     scopeEnumSeparator: ",",
     allowCustomScopes: true,
