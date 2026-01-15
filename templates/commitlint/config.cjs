@@ -18,13 +18,15 @@ module.exports = {
         "revert",
       ],
     ],
+    "scope-empty": [2, "never"], // 必须填写 scope
     "subject-empty": [2, "never"],
     "subject-max-length": [2, "always", 72],
+    "subject-case": [0], // 允许中文，不限制大小写
   },
   prompt: {
     messages: {
       type: "选择你要提交的类型:",
-      customScope: "输入 scope (可选，如: login, auth):",
+      scope: "输入 scope (必填，如: login, auth):",
       subject: "输入简短描述:",
       confirmCommit: "确认提交?",
     },
@@ -43,13 +45,13 @@ module.exports = {
     ],
     useEmoji: false,
     skipQuestions: [
-      "scope",
       "body",
       "breaking",
       "breakingBody",
       "footer",
       "footerPrefix",
     ],
-    defaultScope: "___CUSTOM___:",
+    enableMultipleScopes: false,
+    scopeEnumSeparator: ",",
   },
 };
