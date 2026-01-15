@@ -27,8 +27,10 @@ module.exports = {
         "revert",
       ],
     ],
+    "scope-empty": [2, "never"], // 必须填写 scope
     "subject-empty": [2, "never"],
     "subject-max-length": [2, "always", 72],
+    "subject-case": [0], // 允许中文，不限制大小写
   },
   prompt: {
     messages: {
