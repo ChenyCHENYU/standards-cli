@@ -1,6 +1,6 @@
 {
   "name": "standards-cli",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "一键初始化前端项目提交规范链路（cz-git + commitlint + husky + lint-staged）",
   "type": "module",
   "bin": {
