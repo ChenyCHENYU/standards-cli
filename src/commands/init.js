@@ -199,7 +199,10 @@ async function updatePackageJson() {
     pkg.scripts.prepare = "husky";
     console.log('  ✔ 添加 scripts.prepare = "husky"');
     modified = true;
-  } else if (pkg.scripts.prepare === "husky install" || pkg.scripts.prepare === "husky init") {
+  } else if (
+    pkg.scripts.prepare === "husky install" ||
+    pkg.scripts.prepare === "husky init"
+  ) {
     pkg.scripts.prepare = "husky";
     console.log('  ✔ 更新 scripts.prepare = "husky"');
     modified = true;
@@ -242,21 +245,29 @@ async function updatePackageJson() {
     console.log("  ⚠ config.commitizen.path (已存在，跳过)");
   }
 
-  // 添加 pnpm overrides 来降级 string-width（兼容 Node.js 18）
-  if (!pkg.pnpm) {
-    pkg.pnpm = {};
-  }
-  if (!pkg.pnpm.overrides) {
-    pkg.pnpm.overrides = {};
-  }
-  if (pkg.pnpm.overrides["string-width"] !== "^7.0.0") {
-    pkg.pnpm.overrides["string-width"] = "^7.0.0";
-    console.log(
-      '  ✔ 添加 pnpm.overrides.string-width = "^7.0.0" (兼容 Node.js 18)'
-    );
-    modified = true;
+  // 智能处理 string-width 版本兼容性
+  // string-width v5+ 是 ESM 模块，可能导致某些工具在低版本 Node.js 或 CommonJS 环境下报错
+  // 检测 Node.js 版本，< 18 时降级到 v4
+  const nodeVersion = process.version.slice(1).split(".").map(Number);
+  const needOverride = nodeVersion[0] < 18;
+
+  if (needOverride) {
+    if (!pkg.pnpm) {
+      pkg.pnpm = {};
+    }
+    if (!pkg.pnpm.overrides) {
+      pkg.pnpm.overrides = {};
+    }
+    if (!pkg.pnpm.overrides["string-width"]) {
+      pkg.pnpm.overrides["string-width"] = "^4.2.3";
+      console.log(
+        '  ✔ 添加 pnpm.overrides["string-width"] = "^4.2.3" (Node.js < 18 兼容)'
+      );
+      modified = true;
+    }
   } else {
-    console.log("  ⚠ pnpm.overrides.string-width (已存在，跳过)");
+    // Node.js >= 18，不添加 override，让 pnpm 自动处理
+    console.log("  ℹ Node.js >= 18，跳过 string-width override");
   }
 
   if (modified) {
