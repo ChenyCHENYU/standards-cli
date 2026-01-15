@@ -1,3 +1,12 @@
+/*
+ * @Author: ChenYu ycyplus@gmail.com
+ * @Date: 2026-01-13 23:14:22
+ * @LastEditors: ChenYu ycyplus@gmail.com
+ * @LastEditTime: 2026-01-13 23:22:25
+ * @FilePath: \standards-cli\templates\commitlint\config.cjs
+ * @Description:
+ * Copyright (c) 2026 by CHENY, All Rights Reserved 😎.
+ */
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
