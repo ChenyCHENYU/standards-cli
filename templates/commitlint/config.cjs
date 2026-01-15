@@ -42,7 +42,14 @@ module.exports = {
       { value: "revert", name: "revert:   回滚提交" },
     ],
     useEmoji: false,
-    skipQuestions: ["scope", "body", "breaking", "breakingBody", "footer", "footerPrefix"],
+    skipQuestions: [
+      "scope",
+      "body",
+      "breaking",
+      "breakingBody",
+      "footer",
+      "footerPrefix",
+    ],
     defaultScope: "___CUSTOM___:",
   },
 };
