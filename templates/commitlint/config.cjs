@@ -35,7 +35,7 @@ module.exports = {
   prompt: {
     messages: {
       type: "选择你要提交的类型:",
-      scope: "输入 scope (必填，如: login, auth):",
+      customScope: "输入 scope (可选，如: login, auth):",
       subject: "输入简短描述:",
       confirmCommit: "确认提交?",
     },
@@ -47,20 +47,13 @@ module.exports = {
       { value: "refactor", name: "refactor: 重构" },
       { value: "perf", name: "perf:     性能优化" },
       { value: "test", name: "test:     测试相关" },
-      { value: "build", name: "build:    构建系统" },
-      { value: "ci", name: "ci:       CI 配置" },
+      { value: "build", name: "build:    构建系统或外部依赖变动" },
+      { value: "ci", name: "ci:       CI 配置变动" },
       { value: "chore", name: "chore:    其他杂项" },
       { value: "revert", name: "revert:   回滚提交" },
     ],
     useEmoji: false,
-    skipQuestions: [
-      "body",
-      "breaking",
-      "breakingBody",
-      "footer",
-      "footerPrefix",
-    ],
-    enableMultipleScopes: false,
-    scopeEnumSeparator: ",",
+    skipQuestions: ["scope", "body", "breaking", "breakingBody", "footer", "footerPrefix"],
+    defaultScope: "___CUSTOM___:",
   },
 };
